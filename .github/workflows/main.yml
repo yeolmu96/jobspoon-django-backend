@@ -1,0 +1,77 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOCKER_IMAGE: ghcr.io/${{ secrets.ACTOR }}/django-backend:latest
+
+jobs:
+  build:
+    name: build-app
+    runs-on: ubuntu-latest
+    steps:
+      ## 코드 체크아웃
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      ## Python 의존성 캐싱
+      - name: Cache pip packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+        
+      - name: Create .env file for CD Deploy
+        run: |
+          echo "${{ secrets.PRODUCTION_ENV }}" > .env
+          
+      ## Python 의존성 설치
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      ## 테스트 실행 (필요시)
+      # - name: Run tests
+      #   run: |
+      #   python manage.py test
+
+      ## docker build & push to production
+      - name: Docker build & push to prod
+        run: |
+          docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GHCR_TOKEN }}
+          docker buildx create --name arm64builder --use
+          docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t ghcr.io/${{ secrets.ACTOR }}/django-backend:latest --push .
+          docker logout
+          
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: [ self-hosted, deploy-django ]
+    steps:
+    - name: Deploy to Production
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.HOST_IP }}
+        username: ec2-user
+        key: ${{ secrets.PRIVATE_KEY }}
+        script_stop: true
+        script: |
+          cd /home/ec2-user/jobspoon/django
+          docker-compose down
+
+          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker pull ${{ env.DOCKER_IMAGE }}
+
+          docker image prune -f
+          docker logout
+
+          docker-compose up -d
