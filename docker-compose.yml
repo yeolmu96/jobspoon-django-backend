@@ -1,7 +1,7 @@
 services:
   django:
     container_name: django
-    image: ghcr.io/${GITHUB_ACTOR}/backend-deploy-server:latest
+    image: ghcr.io/imcoder0000/backend-deploy-server:latest
     command: /app/wait-for-it.sh db:3306 -t 15 -- sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     restart: always
     ports:
