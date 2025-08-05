@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  DOCKER_IMAGE: ghcr.io/${{ secrets.ACTOR }}/django-backend:latest
+  DOCKER_IMAGE: ghcr.io/imcoder0000/django-backend:latest
 
 jobs:
   build:
@@ -47,9 +47,9 @@ jobs:
       ## docker build & push to production
       - name: Docker build & push to prod
         run: |
-          docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GHCR_TOKEN }}
+          docker login ghcr.io -u imcoder0000 -p ${{ secrets.GHCR_TOKEN }}
           docker buildx create --name arm64builder --use
-          docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t ghcr.io/${{ secrets.ACTOR }}/django-backend:latest --push .
+          docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t ghcr.io/imcoder0000/django-backend:latest --push .
           docker logout
           
   deploy:
@@ -62,7 +62,7 @@ jobs:
           cd /home/ec2-user/jobspoon/django
           docker-compose down
 
-          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u imcoder0000 --password-stdin
           docker pull ${{ env.DOCKER_IMAGE }}
 
           docker image prune -f
