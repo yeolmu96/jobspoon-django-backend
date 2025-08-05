@@ -57,14 +57,8 @@ jobs:
     name: Deploy
     runs-on: [ self-hosted, deploy-django ]
     steps:
-    - name: Deploy to Production
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.HOST_IP }}
-        username: ec2-user
-        key: ${{ secrets.PRIVATE_KEY }}
-        script_stop: true
-        script: |
+      - name: Deploy to Production (local shell)
+        run: |
           cd /home/ec2-user/jobspoon/django
           docker-compose down
 
