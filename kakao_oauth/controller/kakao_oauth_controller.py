@@ -48,11 +48,14 @@ class KakaoOauthController(viewsets.ViewSet):
 
         try:
             tokenResponse = self.kakaoOauthService.requestAccessToken(code)
+            print(f"{tokenResponse}")
             accessToken = tokenResponse['access_token']
             print(f"accessToken: {accessToken}")
 
             with transaction.atomic():
+                print(f" 오류 안남 ")
                 userInfo = self.kakaoOauthService.requestUserInfo(accessToken)
+                print(f"{userInfo}")
                 user_id = userInfo.get('id', '')  # 사용자 ID
                 nickname = userInfo.get('properties', {}).get('nickname', '')  # 닉네임
                 email = userInfo.get('kakao_account', {}).get('email', '')  # 이메일

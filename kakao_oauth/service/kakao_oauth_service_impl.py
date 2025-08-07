@@ -27,6 +27,7 @@ class KakaoOauthServiceImpl(KakaoOauthService):
         return self.__kakaoOauthRepository.getAccessToken(code)
 
     def requestUserInfo(self, accessToken):
+        print(f" 오류 안남 ")
         return self.__kakaoOauthRepository.getUserInfo(accessToken)
 
     def requestKakaoWithdrawLink(self, accessToken):
