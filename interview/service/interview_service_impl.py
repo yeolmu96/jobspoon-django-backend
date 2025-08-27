@@ -29,6 +29,8 @@ class InterviewServiceImpl(InterviewService):
     def createInterview(self, accountId, jobCategory, experienceLevel, projectExperience, academicBackground,techStack, companyName): #,projectExperience, academicBackground, techStack):
         foundAccount = self.__accountRepository.findById(accountId)  # 여기서 회원 식별
 
+        print(f"인터뷰 생성 서비스 계층 진입")
+
         if not foundAccount:
             raise Exception("해당 accountId에 해당하는 account를 찾을 수 없습니다.")
 

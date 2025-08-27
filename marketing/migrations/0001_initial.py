@@ -10,7 +10,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("account", "0001_initial"),
+        # account 엔티티 입력 제거 - account는 이제 Django 모델이 아니라 Spring에서 관리함
+        # ("account", "0001_initial"),
         ("company_report", "0001_initial"),
     ]
 
@@ -25,14 +26,8 @@ class Migration(migrations.Migration):
                     "last_click_date",
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
-                (
-                    "account",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="marketing",
-                        to="account.account",
-                    ),
-                ),
+                # account는 이제 Spring에서 관리하기 때문에 ForeignKey 대신 IntegerField 사용
+                ("account_id", models.IntegerField()),
                 (
                     "product",
                     models.ForeignKey(
