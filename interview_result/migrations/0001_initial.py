@@ -9,7 +9,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("account", "0001_initial"),
+        # account 엔티티 입력 제거 - account는 이제 Django 모델이 아니라 Spring에서 관리함
+        # ("account", "0001_initial"),
     ]
 
     operations = [
@@ -17,13 +18,8 @@ class Migration(migrations.Migration):
             name="InterviewResult",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                (
-                    "account",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="account.account",
-                    ),
-                ),
+                # account는 이제 Spring에서 관리하기 때문에 ForeignKey 대신 IntegerField 사용
+                ("account_id", models.IntegerField()),
             ],
             options={
                 "db_table": "interview_result",
