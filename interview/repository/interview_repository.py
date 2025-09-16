@@ -19,8 +19,8 @@ class InterviewRepository(ABC):
         pass
 
     @abstractmethod
-    def findInterviewByAccount(self, account, page: int, pageSize: int) -> List[object]:
-        """특정 계정에 해당하는 인터뷰 목록을 반환합니다. 페이지네이션 적용"""
+    def findInterviewByAccount(self, account_id: int, page: int, pageSize: int) -> List[object]:
+        """특정 계정(account_id)에 해당하는 인터뷰 목록을 반환합니다. 페이지네이션 적용"""
         pass
 
     @abstractmethod

@@ -42,15 +42,15 @@ class InterviewRepositoryImpl(InterviewRepository):
         except Interview.DoesNotExist:
             return None
 
-    def findInterviewByAccount(self, account, page: int, pageSize: int) -> models.QuerySet:
+    def findInterviewByAccount(self, account_id: int, page: int, pageSize: int) -> models.QuerySet:
         """특정 계정에 해당하는 인터뷰 목록 조회 (페이지네이션 적용)"""
-        interviews = Interview.objects.filter(account=account).order_by("-created_at")
+        interviews = Interview.objects.filter(account_id=account_id).order_by("-created_at")
         paginator = Paginator(interviews, pageSize)
         try:
-            page = paginator.page(page)
+            page_obj = paginator.page(page)   # ✅ page 변수 충돌 방지
         except EmptyPage:
-            page = paginator.page(paginator.num_pages)
-        return page
+            page_obj = paginator.page(paginator.num_pages)
+        return page_obj
 
     def deleteById(self, interviewId: int) -> bool:
         """인터뷰 ID로 인터뷰 삭제"""
