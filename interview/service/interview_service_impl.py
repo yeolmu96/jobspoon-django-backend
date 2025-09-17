@@ -80,7 +80,8 @@ class InterviewServiceImpl(InterviewService):
                     "id": interview.id,
                     "topic": interview.topic,
                     "created_at": interview.created_at,
-                    # "yearsOfExperience": interview.experience_level  # 필요하다면 변환
+                    "status": interview.status,  # ✅ 추가
+                    # "yearsOfExperience": interview.experience_level
                 }
                 for interview in paginatedInterviewList
             ]

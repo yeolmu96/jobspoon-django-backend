@@ -31,11 +31,20 @@ class InterviewResultController(viewsets.ViewSet):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             accountId = self.redisCacheService.getValueByKey(userToken)
-            result = self.interviewResultService.saveInterviewResult(accountId)
+
+            # result = self.interviewResultService.saveInterviewResult(accountId)
+            # ✅ InterviewResult 저장 (accountId + interviewId)
+            result = self.interviewResultService.saveInterviewResult(accountId, interviewId)
+
+            # ✅ Interview 테이블의 status도 COMPLETED로 업데이트
+            from interview.entity.interview import Interview
+            Interview.objects.filter(id=interviewId, account_id=accountId).update(status="COMPLETED")
+
 
             return JsonResponse({
                 "message": "면접 완료 기록 저장 성공",
                 "interviewResultId": result.id,
+                "status": "COMPLETED",   # 👈 프론트에서 확인 가능
                 "success": True
             }, status=status.HTTP_200_OK)
 

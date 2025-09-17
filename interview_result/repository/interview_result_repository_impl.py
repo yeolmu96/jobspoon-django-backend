@@ -53,9 +53,22 @@ class InterviewResultRepositoryImpl(InterviewResultRepository):
 
         return interviewResultQASList
 
-    def saveInterviewResult(self, accountId):
+    # def saveInterviewResult(self, accountId):
+    #     try:
+    #         interviewResult = InterviewResult.objects.create(account_id=accountId)
+    #         print("✅ 면접 완료 기록 저장")
+    #         return interviewResult
+    #     except Exception as e:
+    #         print(f"❌ 오류 발생: {e}")
+    #         raise
+
+    # ✅ 수정된 저장 로직
+    def saveInterviewResult(self, accountId: int, interviewId: int):
         try:
-            interviewResult = InterviewResult.objects.create(account_id=accountId)
+            interviewResult = InterviewResult.objects.create(
+                account_id=accountId,
+                interview_id=interviewId  # ✅ 추가됨
+            )
             print("✅ 면접 완료 기록 저장")
             return interviewResult
         except Exception as e:

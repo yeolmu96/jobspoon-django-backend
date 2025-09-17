@@ -23,8 +23,12 @@ class InterviewResultServiceImpl(InterviewResultService):
         return cls.__instance
 
 
-    def saveInterviewResult(self, accountId):
-        return  self.__interviewResultRepository.saveInterviewResult(accountId)
+    # def saveInterviewResult(self, accountId):
+    #     return  self.__interviewResultRepository.saveInterviewResult(accountId)
+
+    # ✅ 수정된 저장 로직
+    def saveInterviewResult(self, accountId: int, interviewId: int):
+        return self.__interviewResultRepository.saveInterviewResult(accountId, interviewId)
 
     def getInterviewResult(self, accountId):
         account = self.__accountRepository.findById(accountId)
